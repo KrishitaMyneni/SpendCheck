@@ -4,6 +4,11 @@
 SpendCheck is a minimal personal finance dashboard that lets you:
 
 - ✅ Log daily expenses
+  ![SpendCheck Homempage](https://github.com/KrishitaMyneni/SpendCheck/blob/main/Screenshot%202025-08-02%20200453.png)
+  ![SpendCheck Currency converter](https://github.com/KrishitaMyneni/SpendCheck/blob/main/Screenshot%202025-08-02%20200531.png)
+![SpendCheck Grouped expenses](https://github.com/KrishitaMyneni/SpendCheck/blob/main/Screenshot%202025-08-02%20200553.png)
+
+
 - 🔁 Convert currencies using real-time exchange rates
 - 📊 Group expenses by category
 - 💾 Save data using `localStorage` (persistent across reloads)
