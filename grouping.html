@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Category Grouping</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: rgb(249, 235, 164);
+      padding: 30px;
+    }
+
+    h1 {
+      text-align: center;
+      color: rgb(18, 16, 139);
+      margin-bottom: 40px;
+    }
+
+    .category-section {
+      background-color: rgb(247, 244, 196);
+      padding: 20px;
+      margin-bottom: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .category-section h2 {
+      color: rgb(18, 16, 139);
+      margin-bottom: 15px;
+    }
+
+    .expense-entry {
+      margin-bottom: 10px;
+      padding-left: 15px;
+    }
+
+    .expense-entry span {
+      display: inline-block;
+      min-width: 100px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Category Grouping</h1>
+  <div id="categories"></div>
+
+  <script>
+    const categories = {
+      Travel: [],
+      Education: [],
+      Food: [],
+      Essentials: [],
+      Other: []
+    };
+
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+    days.forEach(day => {
+      const stored = JSON.parse(localStorage.getItem(day)) || [];
+
+      stored.forEach(entry => {
+        if (typeof entry === 'object' && entry.amount && entry.category && categories.hasOwnProperty(entry.category)) {
+          categories[entry.category].push({ day, amount: entry.amount });
+        }
+      });
+    });
+
+    const container = document.getElementById("categories");
+
+    for (let cat in categories) {
+      const section = document.createElement("div");
+      section.className = "category-section";
+
+      const title = document.createElement("h2");
+      title.textContent = cat;
+      section.appendChild(title);
+
+      if (categories[cat].length === 0) {
+        const empty = document.createElement("p");
+        empty.textContent = "No expenses yet.";
+        section.appendChild(empty);
+      } else {
+        categories[cat].forEach(entry => {
+          const line = document.createElement("div");
+          line.className = "expense-entry";
+          line.innerHTML = `<span>₹${entry.amount}</span> on ${entry.day}`;
+          section.appendChild(line);
+        });
+      }
+
+      container.appendChild(section);
+    }
+  </script>
+
+</body>
+</html>

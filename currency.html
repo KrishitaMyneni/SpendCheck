@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Currency Converter</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: rgb(249, 235, 164);
+      margin: 0;
+      padding: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      color:  rgb(18, 16, 139);
+      margin-bottom: 30px;
+    }
+
+    .converter {
+      background: rgb(247, 244, 196);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(12, 12, 12, 0.1);
+      max-width: 400px;
+      width: 100%;
+      
+    }
+
+    .converter select,
+    .converter input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .converter button {
+      width: 100%;
+      padding: 12px;
+      background-color:  rgb(18, 16, 139);;
+      color: white;
+      border: none;
+      font-weight: bold;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .converter button:hover {
+      background-color:  rgb(18, 16, 139);;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color:  rgb(18, 16, 139);;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Currency Converter</h1>
+
+  <div class="converter">
+    <select id="fromCurrency">
+      <option value="INR">INR</option>
+      <option value="USD">USD</option>
+      <option value="EUR">EUR</option>
+      <option value="GBP">GBP</option>
+    </select>
+
+    <select id="toCurrency">
+      <option value="USD">USD</option>
+      <option value="INR">INR</option>
+      <option value="EUR">EUR</option>
+      <option value="GBP">GBP</option>
+    </select>
+
+    <input type="number" id="amount" placeholder="Enter amount" />
+
+    <button onclick="convertCurrency()">Convert</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    async function convertCurrency() {
+      const from = document.getElementById("fromCurrency").value;
+      const to = document.getElementById("toCurrency").value;
+      const amount = parseFloat(document.getElementById("amount").value);
+
+      if (!amount || amount <= 0) {
+        document.getElementById("result").textContent = "Enter a valid amount.";
+        return;
+      }
+
+      try {
+        const res = await fetch(`https://api.exchangerate-api.com/v4/latest/${from}`);
+        const data = await res.json();
+        const rate = data.rates[to];
+        const converted = (amount * rate).toFixed(2);
+
+        document.getElementById("result").textContent = `${amount} ${from} = ${converted} ${to}`;
+      } catch (err) {
+        document.getElementById("result").textContent = "Error fetching exchange rate.";
+      }
+    }
+  </script>
+</body>
+</html>
