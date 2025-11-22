@@ -19,7 +19,7 @@ SpendCheck is a minimal personal finance dashboard that lets you:
 
 
 # Live website !!
-👉 [Click here to view the live site](https://krishitamyneni.github.io/SpendCheck/)
+👉 [Click here to view the live site](https://spendcheck-website.netlify.app/)
 
 
 
