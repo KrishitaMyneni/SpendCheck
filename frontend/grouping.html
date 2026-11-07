@@ -9,12 +9,37 @@
       font-family: 'Segoe UI', sans-serif;
       background-color: rgb(255, 255, 255);
       padding: 30px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .back-btn {
+      color: rgb(18, 16, 139);
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 15px;
+      padding: 8px 16px;
+      border: 1px solid rgb(18, 16, 139);
+      border-radius: 20px;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .back-btn:hover {
+      background-color: rgb(18, 16, 139);
+      color: white;
     }
 
     h1 {
       text-align: center;
       color: rgb(18, 16, 139);
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
 
     .category-section {
@@ -25,73 +50,151 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
+    .category-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 2px solid #f3f4f6;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+
     .category-section h2 {
       color: rgb(18, 16, 139);
-      margin-bottom: 15px;
+      margin: 0;
+    }
+
+    .category-total {
+      font-size: 16px;
+      font-weight: 600;
+      color: #374151;
     }
 
     .expense-entry {
       margin-bottom: 10px;
       padding-left: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .expense-entry span {
+    .expense-entry span.amount {
       display: inline-block;
       min-width: 100px;
       font-weight: bold;
+      color: #111;
+    }
+
+    .expense-entry span.date {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .empty-text {
+      color: #9ca3af;
+      margin: 10px 0;
+      padding-left: 15px;
     }
   </style>
 </head>
 <body>
 
+  <div class="top-nav">
+    <a href="index.html" class="back-btn">← Back to Dashboard</a>
+    <span id="userGreeting" style="font-weight: 600; color: #4b5563;"></span>
+  </div>
+
   <h1>Category Grouping</h1>
-  <div id="categories"></div>
+  <div id="categories">Loading grouped expenses...</div>
 
+  <script src="config.js"></script>
+  <script src="api.js"></script>
   <script>
-    const categories = {
-      Travel: [],
-      Education: [],
-      Food: [],
-      Essentials: [],
-      Other: []
-    };
-
-    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-
-    days.forEach(day => {
-      const stored = JSON.parse(localStorage.getItem(day)) || [];
-
-      stored.forEach(entry => {
-        if (typeof entry === 'object' && entry.amount && entry.category && categories.hasOwnProperty(entry.category)) {
-          categories[entry.category].push({ day, amount: entry.amount });
-        }
-      });
-    });
-
-    const container = document.getElementById("categories");
-
-    for (let cat in categories) {
-      const section = document.createElement("div");
-      section.className = "category-section";
-
-      const title = document.createElement("h2");
-      title.textContent = cat;
-      section.appendChild(title);
-
-      if (categories[cat].length === 0) {
-        const empty = document.createElement("p");
-        empty.textContent = "No expenses yet.";
-        section.appendChild(empty);
-      } else {
-        categories[cat].forEach(entry => {
-          const line = document.createElement("div");
-          line.className = "expense-entry";
-          line.innerHTML = `<span>₹${entry.amount}</span> on ${entry.day}`;
-          section.appendChild(line);
-        });
+    if (requireAuth()) {
+      const user = getUser();
+      if (user) {
+        document.getElementById("userGreeting").textContent = `Logged in as ${user.name || user.email}`;
       }
 
-      container.appendChild(section);
+      loadGroupedExpenses();
+    }
+
+    async function loadGroupedExpenses() {
+      const container = document.getElementById("categories");
+
+      const categories = {
+        Travel: [],
+        Education: [],
+        Food: [],
+        Essentials: [],
+        Other: []
+      };
+
+      try {
+        const res = await SpendCheckAPI.getExpenses();
+        const expenses = (res && res.data) || [];
+
+        expenses.forEach(entry => {
+          const catKey = entry.categoryDisplayName || entry.category;
+          // Match case-insensitively
+          for (let c in categories) {
+            if (c.toLowerCase() === (catKey || "").toLowerCase()) {
+              categories[c].push(entry);
+              break;
+            }
+          }
+        });
+
+        container.innerHTML = "";
+
+        for (let cat in categories) {
+          const section = document.createElement("div");
+          section.className = "category-section";
+
+          const headerDiv = document.createElement("div");
+          headerDiv.className = "category-header";
+
+          const title = document.createElement("h2");
+          title.textContent = cat;
+          headerDiv.appendChild(title);
+
+          const items = categories[cat];
+          const total = items.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+
+          const totalSpan = document.createElement("span");
+          totalSpan.className = "category-total";
+          totalSpan.textContent = `Total: ₹${total.toFixed(2)} (${items.length} item${items.length === 1 ? '' : 's'})`;
+          headerDiv.appendChild(totalSpan);
+
+          section.appendChild(headerDiv);
+
+          if (items.length === 0) {
+            const empty = document.createElement("p");
+            empty.className = "empty-text";
+            empty.textContent = "No expenses yet.";
+            section.appendChild(empty);
+          } else {
+            items.forEach(entry => {
+              const line = document.createElement("div");
+              line.className = "expense-entry";
+
+              const d = new Date(entry.expenseDate + "T00:00:00");
+              const dayName = d.toLocaleDateString("en-US", { weekday: "long" });
+              const dateFormatted = d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+
+              line.innerHTML = `
+                <span class="amount">₹${parseFloat(entry.amount).toFixed(2)}</span>
+                <span class="date">${dayName}, ${dateFormatted}</span>
+              `;
+              section.appendChild(line);
+            });
+          }
+
+          container.appendChild(section);
+        }
+      } catch (err) {
+        container.innerHTML = `<p style="color: red; text-align: center;">Error loading grouped expenses: ${err.message}</p>`;
+      }
     }
   </script>
 

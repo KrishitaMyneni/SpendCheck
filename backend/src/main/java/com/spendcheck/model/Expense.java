@@ -1,5 +1,6 @@
 package com.spendcheck.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -11,12 +12,21 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "expenses")
+@Table(name = "expenses", indexes = {
+        @Index(name = "idx_expenses_user_id", columnList = "user_id"),
+        @Index(name = "idx_expenses_category", columnList = "category"),
+        @Index(name = "idx_expenses_date", columnList = "expense_date")
+})
 public class Expense {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    private User user;
 
     @NotBlank(message = "Title is required")
     @Size(max = 120, message = "Title cannot exceed 120 characters")
@@ -50,7 +60,8 @@ public class Expense {
     public Expense() {
     }
 
-    public Expense(String title, BigDecimal amount, Category category, LocalDate expenseDate, String notes) {
+    public Expense(User user, String title, BigDecimal amount, Category category, LocalDate expenseDate, String notes) {
+        this.user = user;
         this.title = title;
         this.amount = amount;
         this.category = category;
@@ -75,6 +86,14 @@ public class Expense {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getTitle() {

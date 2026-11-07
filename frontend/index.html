@@ -10,24 +10,26 @@
 
 <body>
     <div class="container">
-        <div class="header">
-            <h1 class="title">SpendCheck</h1>
-            <div class="side_buttons">
+        <div class="header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <h1 class="title" style="margin: 0;">SpendCheck</h1>
+            <div class="side_buttons" style="display: flex; align-items: center; gap: 12px; margin: 0; padding: 0;">
+                <span id="userGreeting" style="font-weight: 600; color: #333; margin-right: 5px;"></span>
                 <a href="currency.html">
                     <button class="currencybutton">currency converter</button>
                 </a>
-            <a href="grouping.html">               
-                 <button class="category" style="margin-left: 20px;">category grouping</button>
-            </a>
+                <a href="grouping.html">               
+                    <button class="category">category grouping</button>
+                </a>
+                <button id="logoutBtn" class="category" style="background-color: #6b7280; display: none;">Logout</button>
             </div>
-
         </div>
     </div>
-<hr>
-
-
+    <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
 
     <div class="week" id="weekgrid"></div>
+
+    <script src="config.js"></script>
+    <script src="api.js"></script>
     <script src="mainpage.js"></script>
 </body>
 

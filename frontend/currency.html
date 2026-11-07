@@ -9,14 +9,38 @@
       font-family: 'Segoe UI', sans-serif;
       background-color: rgb(255, 255, 255);
       margin: 0;
-      padding: 50px;
+      padding: 50px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
+    .top-nav {
+      max-width: 400px;
+      width: 100%;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .back-btn {
+      color: rgb(18, 16, 139);
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 6px 14px;
+      border: 1px solid rgb(18, 16, 139);
+      border-radius: 20px;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .back-btn:hover {
+      background-color: rgb(18, 16, 139);
+      color: white;
+    }
+
     h1 {
-      color:  rgb(18, 16, 139);
+      color: rgb(18, 16, 139);
       margin-bottom: 30px;
     }
 
@@ -27,7 +51,7 @@
       box-shadow: 0 4px 8px rgba(12, 12, 12, 0.1);
       max-width: 400px;
       width: 100%;
-      
+      box-sizing: border-box;
     }
 
     .converter select,
@@ -38,78 +62,128 @@
       border-radius: 8px;
       border: 1px solid #ccc;
       font-size: 16px;
+      box-sizing: border-box;
     }
 
     .converter button {
       width: 100%;
       padding: 12px;
-      background-color:  rgb(18, 16, 139);;
+      background-color: rgb(18, 16, 139);
       color: white;
       border: none;
       font-weight: bold;
       font-size: 16px;
       border-radius: 8px;
       cursor: pointer;
+      margin-top: 5px;
+      transition: background-color 0.2s;
     }
 
     .converter button:hover {
-      background-color:  rgb(18, 16, 139);;
+      background-color: rgb(12, 10, 105);
+    }
+
+    .converter button:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
     }
 
     .result {
       margin-top: 20px;
       font-size: 18px;
       font-weight: bold;
-      color:  rgb(18, 16, 139);;
+      color: rgb(18, 16, 139);
+      text-align: center;
+      min-height: 24px;
+    }
+
+    .meta {
+      font-size: 12px;
+      color: #6b7280;
+      text-align: center;
+      margin-top: 6px;
     }
   </style>
 </head>
 <body>
 
+  <div class="top-nav">
+    <a href="index.html" class="back-btn">← Back to Dashboard</a>
+  </div>
+
   <h1>Currency Converter</h1>
 
   <div class="converter">
+    <label for="fromCurrency" style="font-size: 13px; font-weight: 600; color: #555;">From</label>
     <select id="fromCurrency">
-      <option value="INR">INR</option>
-      <option value="USD">USD</option>
-      <option value="EUR">EUR</option>
-      <option value="GBP">GBP</option>
+      <option value="INR">INR - Indian Rupee</option>
+      <option value="USD" selected>USD - US Dollar</option>
+      <option value="EUR">EUR - Euro</option>
+      <option value="GBP">GBP - British Pound</option>
+      <option value="CAD">CAD - Canadian Dollar</option>
+      <option value="AUD">AUD - Australian Dollar</option>
+      <option value="JPY">JPY - Japanese Yen</option>
     </select>
 
+    <label for="toCurrency" style="font-size: 13px; font-weight: 600; color: #555;">To</label>
     <select id="toCurrency">
-      <option value="USD">USD</option>
-      <option value="INR">INR</option>
-      <option value="EUR">EUR</option>
-      <option value="GBP">GBP</option>
+      <option value="INR" selected>INR - Indian Rupee</option>
+      <option value="USD">USD - US Dollar</option>
+      <option value="EUR">EUR - Euro</option>
+      <option value="GBP">GBP - British Pound</option>
+      <option value="CAD">CAD - Canadian Dollar</option>
+      <option value="AUD">AUD - Australian Dollar</option>
+      <option value="JPY">JPY - Japanese Yen</option>
     </select>
 
-    <input type="number" id="amount" placeholder="Enter amount" />
+    <label for="amount" style="font-size: 13px; font-weight: 600; color: #555;">Amount</label>
+    <input type="number" id="amount" placeholder="Enter amount" min="0.01" step="any" value="100" />
 
-    <button onclick="convertCurrency()">Convert</button>
+    <button id="convertBtn" onclick="convertCurrency()">Convert</button>
 
     <div class="result" id="result"></div>
+    <div class="meta" id="meta"></div>
   </div>
 
+  <script src="config.js"></script>
+  <script src="api.js"></script>
   <script>
+    requireAuth();
+
     async function convertCurrency() {
       const from = document.getElementById("fromCurrency").value;
       const to = document.getElementById("toCurrency").value;
-      const amount = parseFloat(document.getElementById("amount").value);
+      const amountStr = document.getElementById("amount").value.trim();
+      const amount = parseFloat(amountStr);
+      const resultEl = document.getElementById("result");
+      const metaEl = document.getElementById("meta");
+      const btn = document.getElementById("convertBtn");
 
-      if (!amount || amount <= 0) {
-        document.getElementById("result").textContent = "Enter a valid amount.";
+      if (!amount || isNaN(amount) || amount <= 0) {
+        resultEl.textContent = "Please enter a valid amount greater than 0.";
+        resultEl.style.color = "#dc2626";
+        metaEl.textContent = "";
         return;
       }
 
-      try {
-        const res = await fetch(`https://api.exchangerate-api.com/v4/latest/${from}`);
-        const data = await res.json();
-        const rate = data.rates[to];
-        const converted = (amount * rate).toFixed(2);
+      btn.disabled = true;
+      btn.textContent = "Converting...";
+      resultEl.style.color = "rgb(18, 16, 139)";
+      resultEl.textContent = "Fetching rates...";
+      metaEl.textContent = "";
 
-        document.getElementById("result").textContent = `${amount} ${from} = ${converted} ${to}`;
+      try {
+        const res = await SpendCheckAPI.convertCurrency(from, to, amount);
+        const data = (res && res.data) || {};
+        resultEl.textContent = `${amount} ${data.from} = ${data.convertedAmount} ${data.to}`;
+        metaEl.textContent = `1 ${data.from} = ${data.rate} ${data.to} ${data.cached ? '(Cached)' : '(Real-time rate)'}`;
       } catch (err) {
-        document.getElementById("result").textContent = "Error fetching exchange rate.";
+        resultEl.textContent = err.message || "Error fetching exchange rate from backend.";
+        resultEl.style.color = "#dc2626";
+        metaEl.textContent = "";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Convert";
       }
     }
   </script>
