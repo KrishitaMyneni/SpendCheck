@@ -2,5 +2,5 @@
 // Override by setting window.API_BASE_URL before loading this script, or edit here
 const API_BASE_URL = (typeof window !== "undefined" && window.API_BASE_URL)
     ? window.API_BASE_URL
-    : "http://localhost:8080";
+    : "https://spendcheck.onrender.com";
 
