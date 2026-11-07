@@ -1,0 +1,35 @@
+# Maven build artifacts
+backend/target/
+**/target/
+*.class
+
+# Package files
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Environment and sensitive keys
+.env
+backend/.env
+*.env.local
+
+# IDE and Editor configurations
+.idea/
+*.iml
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
+# Maven wrapper jar if downloaded
+.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+logs/
+*.log
