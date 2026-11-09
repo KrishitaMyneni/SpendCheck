@@ -3,152 +3,168 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Currency Converter</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: rgb(255, 255, 255);
-      margin: 0;
-      padding: 50px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .top-nav {
-      max-width: 400px;
-      width: 100%;
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: flex-start;
-    }
-
-    .back-btn {
-      color: rgb(18, 16, 139);
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 14px;
-      padding: 6px 14px;
-      border: 1px solid rgb(18, 16, 139);
-      border-radius: 20px;
-      transition: background-color 0.2s, color 0.2s;
-    }
-
-    .back-btn:hover {
-      background-color: rgb(18, 16, 139);
-      color: white;
-    }
-
-    h1 {
-      color: rgb(18, 16, 139);
-      margin-bottom: 30px;
-    }
-
-    .converter {
-      background: rgb(255, 255, 255);
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(12, 12, 12, 0.1);
-      max-width: 400px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    .converter select,
-    .converter input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-      box-sizing: border-box;
-    }
-
-    .converter button {
-      width: 100%;
-      padding: 12px;
-      background-color: rgb(18, 16, 139);
-      color: white;
-      border: none;
-      font-weight: bold;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 5px;
-      transition: background-color 0.2s;
-    }
-
-    .converter button:hover {
-      background-color: rgb(12, 10, 105);
-    }
-
-    .converter button:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
-    }
-
-    .result {
-      margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
-      color: rgb(18, 16, 139);
-      text-align: center;
-      min-height: 24px;
-    }
-
-    .meta {
-      font-size: 12px;
-      color: #6b7280;
-      text-align: center;
-      margin-top: 6px;
-    }
-  </style>
+  <title>SpendCheck - Currency Converter</title>
+  <link rel="stylesheet" href="mainpage.css">
 </head>
 <body>
 
-  <div class="top-nav">
-    <a href="index.html" class="back-btn">← Back to Dashboard</a>
-  </div>
+  <!-- Unified Navigation Bar -->
+  <nav class="app-nav">
+    <div class="nav-container">
+      <a href="index.html" class="brand-link">
+        <div class="brand-icon-wrapper">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+        <span>SpendCheck</span>
+      </a>
 
-  <h1>Currency Converter</h1>
+      <!-- Mobile Menu Toggle Button -->
+      <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
 
-  <div class="converter">
-    <label for="fromCurrency" style="font-size: 13px; font-weight: 600; color: #555;">From</label>
-    <select id="fromCurrency">
-      <option value="INR">INR - Indian Rupee</option>
-      <option value="USD" selected>USD - US Dollar</option>
-      <option value="EUR">EUR - Euro</option>
-      <option value="GBP">GBP - British Pound</option>
-      <option value="CAD">CAD - Canadian Dollar</option>
-      <option value="AUD">AUD - Australian Dollar</option>
-      <option value="JPY">JPY - Japanese Yen</option>
-    </select>
+      <!-- Nav Items -->
+      <div class="nav-menu" id="navMenu">
+        <div class="nav-links">
+          <a href="index.html" class="nav-link">Dashboard</a>
+          <a href="grouping.html" class="nav-link">Grouping</a>
+          <!-- Butter Yellow Location 1: Active Nav Item Underline -->
+          <a href="currency.html" class="nav-link active">Currency</a>
+        </div>
 
-    <label for="toCurrency" style="font-size: 13px; font-weight: 600; color: #555;">To</label>
-    <select id="toCurrency">
-      <option value="INR" selected>INR - Indian Rupee</option>
-      <option value="USD">USD - US Dollar</option>
-      <option value="EUR">EUR - Euro</option>
-      <option value="GBP">GBP - British Pound</option>
-      <option value="CAD">CAD - Canadian Dollar</option>
-      <option value="AUD">AUD - Australian Dollar</option>
-      <option value="JPY">JPY - Japanese Yen</option>
-    </select>
+        <div class="nav-user-section">
+          <span id="userGreeting" class="user-greeting-pill"></span>
+          <button id="logoutBtn" class="btn-nav-logout" style="display: none;">Log out</button>
+        </div>
+      </div>
+    </div>
+  </nav>
 
-    <label for="amount" style="font-size: 13px; font-weight: 600; color: #555;">Amount</label>
-    <input type="number" id="amount" placeholder="Enter amount" min="0.01" step="any" value="100" />
+  <!-- Centered Converter Layout -->
+  <div class="converter-container">
+    <div class="converter">
+      <h2 class="converter-title">Currency Converter</h2>
+      <p class="converter-subtitle">Live exchange rates with 1-hour fast caching</p>
 
-    <button id="convertBtn" onclick="convertCurrency()">Convert</button>
+      <div class="currency-select-grid">
+        <div>
+          <label for="fromCurrency" class="converter-label">From Currency</label>
+          <select id="fromCurrency" class="form-control">
+            <option value="INR">INR - Indian Rupee</option>
+            <option value="USD" selected>USD - US Dollar</option>
+            <option value="EUR">EUR - Euro</option>
+            <option value="GBP">GBP - British Pound</option>
+            <option value="CAD">CAD - Canadian Dollar</option>
+            <option value="AUD">AUD - Australian Dollar</option>
+            <option value="JPY">JPY - Japanese Yen</option>
+          </select>
+        </div>
 
-    <div class="result" id="result"></div>
-    <div class="meta" id="meta"></div>
+        <button type="button" class="currency-swap-btn" title="Swap currencies" onclick="swapCurrencies()">
+          ⇄
+        </button>
+
+        <div>
+          <label for="toCurrency" class="converter-label">To Currency</label>
+          <select id="toCurrency" class="form-control">
+            <option value="INR" selected>INR - Indian Rupee</option>
+            <option value="USD">USD - US Dollar</option>
+            <option value="EUR">EUR - Euro</option>
+            <option value="GBP">GBP - British Pound</option>
+            <option value="CAD">CAD - Canadian Dollar</option>
+            <option value="AUD">AUD - Australian Dollar</option>
+            <option value="JPY">JPY - Japanese Yen</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="converter-input-group">
+        <label for="amount" class="converter-label">Amount</label>
+        <input type="number" id="amount" class="form-control" placeholder="Enter amount to convert" min="0.01" step="any" value="100" />
+      </div>
+
+      <!-- Butter Yellow Location 3: Primary button focus ring / hover state -->
+      <button id="convertBtn" class="btn-primary" style="width: 100%; height: 46px; font-size: 15px;" onclick="convertCurrency()">
+        Convert Currency
+      </button>
+
+      <!-- Large Clear Result Display Card -->
+      <div class="result-card">
+        <div class="result" id="result">
+          100 USD = ...
+        </div>
+        <div class="meta" id="meta">
+          Click Convert to fetch live rate
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="config.js"></script>
   <script src="api.js"></script>
   <script>
-    requireAuth();
+    if (requireAuth()) {
+      const user = getUser();
+      const greetingEl = document.getElementById("userGreeting");
+      const logoutBtn = document.getElementById("logoutBtn");
+
+      if (user && greetingEl) {
+        greetingEl.textContent = `Hi, ${user.name || user.email}!`;
+      }
+      if (logoutBtn) {
+        logoutBtn.style.display = "inline-block";
+        logoutBtn.addEventListener("click", () => {
+          SpendCheckAPI.logout();
+        });
+      }
+
+      // Automatically run initial conversion
+      convertCurrency();
+    }
+
+    // Purely Visual UI: Currency Swap Helper
+    function swapCurrencies() {
+      const fromEl = document.getElementById("fromCurrency");
+      const toEl = document.getElementById("toCurrency");
+      const temp = fromEl.value;
+      fromEl.value = toEl.value;
+      toEl.value = temp;
+      convertCurrency();
+    }
+
+    // Purely Visual UI: Mobile Nav Toggle
+    const navToggle = document.getElementById("navToggle");
+    const navMenu = document.getElementById("navMenu");
+    if (navToggle && navMenu) {
+      navToggle.addEventListener("click", () => {
+        const isOpen = navMenu.classList.toggle("open");
+        navToggle.setAttribute("aria-expanded", isOpen);
+      });
+      document.addEventListener("click", (e) => {
+        if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
+          navMenu.classList.remove("open");
+          navToggle.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
+
+    // Visual Currency Number Formatter: Thousands separators & no decimals when whole
+    function formatNumberValue(val) {
+      const num = parseFloat(val);
+      if (isNaN(num)) return val;
+      const rounded = Math.round(num * 100) / 100;
+      const isWhole = (rounded % 1 === 0);
+      return rounded.toLocaleString("en-US", {
+        minimumFractionDigits: isWhole ? 0 : 2,
+        maximumFractionDigits: isWhole ? 0 : 2
+      });
+    }
 
     async function convertCurrency() {
       const from = document.getElementById("fromCurrency").value;
@@ -168,14 +184,16 @@
 
       btn.disabled = true;
       btn.textContent = "Converting...";
-      resultEl.style.color = "rgb(18, 16, 139)";
+      resultEl.style.color = "var(--royal-blue)";
       resultEl.textContent = "Fetching rates...";
       metaEl.textContent = "";
 
       try {
         const res = await SpendCheckAPI.convertCurrency(from, to, amount);
         const data = (res && res.data) || {};
-        resultEl.textContent = `${amount} ${data.from} = ${data.convertedAmount} ${data.to}`;
+        const formattedFromAmt = formatNumberValue(amount);
+        const formattedToAmt = formatNumberValue(data.convertedAmount);
+        resultEl.textContent = `${formattedFromAmt} ${data.from} = ${formattedToAmt} ${data.to}`;
         metaEl.textContent = `1 ${data.from} = ${data.rate} ${data.to} ${data.cached ? '(Cached)' : '(Real-time rate)'}`;
       } catch (err) {
         resultEl.textContent = err.message || "Error fetching exchange rate from backend.";
@@ -183,7 +201,7 @@
         metaEl.textContent = "";
       } finally {
         btn.disabled = false;
-        btn.textContent = "Convert";
+        btn.textContent = "Convert Currency";
       }
     }
   </script>

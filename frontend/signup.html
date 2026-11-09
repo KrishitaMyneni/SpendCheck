@@ -4,163 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SpendCheck - Sign Up</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f7f8fc;
-      margin: 0;
-      padding: 40px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 80vh;
-    }
-
-    .brand {
-      color: rgb(18, 16, 139);
-      font-size: 38px;
-      font-weight: bold;
-      margin-bottom: 24px;
-      text-decoration: none;
-    }
-
-    .auth-card {
-      background: white;
-      padding: 36px;
-      border-radius: 14px;
-      box-shadow: 0 4px 16px rgba(18, 16, 139, 0.08);
-      max-width: 400px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    .auth-card h2 {
-      margin-top: 0;
-      margin-bottom: 8px;
-      color: rgb(18, 16, 139);
-      font-size: 24px;
-    }
-
-    .auth-card p.subtitle {
-      color: #666;
-      font-size: 14px;
-      margin-bottom: 24px;
-    }
-
-    .form-group {
-      margin-bottom: 18px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #333;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 11px 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 15px;
-      box-sizing: border-box;
-      transition: border-color 0.2s;
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: rgb(18, 16, 139);
-    }
-
-    .btn-submit {
-      width: 100%;
-      padding: 13px;
-      background-color: rgb(18, 16, 139);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.2s;
-      margin-top: 6px;
-    }
-
-    .btn-submit:hover {
-      background-color: rgb(12, 10, 105);
-    }
-
-    .btn-submit:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
-    }
-
-    .alert {
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 18px;
-      font-size: 14px;
-      display: none;
-    }
-
-    .alert-error {
-      background-color: #fee2e2;
-      color: #b91c1c;
-      border: 1px solid #fecaca;
-    }
-
-    .footer-text {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 14px;
-      color: #555;
-    }
-
-    .footer-text a {
-      color: rgb(18, 16, 139);
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .footer-text a:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <link rel="stylesheet" href="mainpage.css">
 </head>
 <body>
 
-  <a href="index.html" class="brand">SpendCheck</a>
-
-  <div class="auth-card">
-    <h2>Create Account</h2>
-    <p class="subtitle">Join SpendCheck to track personal finances</p>
-
-    <div id="alertBox" class="alert alert-error"></div>
-
-    <form id="signupForm">
-      <div class="form-group">
-        <label for="name">Full Name</label>
-        <input type="text" id="name" required placeholder="Jane Doe" autocomplete="name">
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-header">
+        <a href="index.html" class="auth-brand">
+          <div class="brand-icon-wrapper">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <span>SpendCheck</span>
+        </a>
+        <h2 class="auth-title">Create Account</h2>
+        <p class="auth-subtitle">Join SpendCheck to start tracking your daily expenses</p>
       </div>
 
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="email" id="email" required placeholder="you@example.com" autocomplete="email">
+      <div id="alertBox" class="alert alert-error"></div>
+
+      <form id="signupForm">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" required placeholder="Jane Doe" autocomplete="name">
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" required placeholder="name@example.com" autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password (min. 6 characters)</label>
+          <input type="password" id="password" required minlength="6" placeholder="Choose a secure password" autocomplete="new-password">
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn-submit">
+          Sign Up
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a href="login.html">Log In</a>
       </div>
-
-      <div class="form-group">
-        <label for="password">Password (min. 6 characters)</label>
-        <input type="password" id="password" required minlength="6" placeholder="Choose a password" autocomplete="new-password">
-      </div>
-
-      <button type="submit" id="submitBtn" class="btn-submit">Sign Up</button>
-    </form>
-
-    <div class="footer-text">
-      Already have an account? <a href="login.html">Log In</a>
     </div>
   </div>
 
@@ -199,4 +87,3 @@
   </script>
 </body>
 </html>
-
