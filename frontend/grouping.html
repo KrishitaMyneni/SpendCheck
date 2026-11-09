@@ -3,117 +3,110 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Category Grouping</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: rgb(255, 255, 255);
-      padding: 30px;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .top-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-    }
-
-    .back-btn {
-      color: rgb(18, 16, 139);
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 15px;
-      padding: 8px 16px;
-      border: 1px solid rgb(18, 16, 139);
-      border-radius: 20px;
-      transition: background-color 0.2s, color 0.2s;
-    }
-
-    .back-btn:hover {
-      background-color: rgb(18, 16, 139);
-      color: white;
-    }
-
-    h1 {
-      text-align: center;
-      color: rgb(18, 16, 139);
-      margin-bottom: 30px;
-    }
-
-    .category-section {
-      background-color: rgb(255, 255, 255);
-      padding: 20px;
-      margin-bottom: 25px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    .category-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      border-bottom: 2px solid #f3f4f6;
-      padding-bottom: 10px;
-      margin-bottom: 15px;
-    }
-
-    .category-section h2 {
-      color: rgb(18, 16, 139);
-      margin: 0;
-    }
-
-    .category-total {
-      font-size: 16px;
-      font-weight: 600;
-      color: #374151;
-    }
-
-    .expense-entry {
-      margin-bottom: 10px;
-      padding-left: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .expense-entry span.amount {
-      display: inline-block;
-      min-width: 100px;
-      font-weight: bold;
-      color: #111;
-    }
-
-    .expense-entry span.date {
-      color: #6b7280;
-      font-size: 14px;
-    }
-
-    .empty-text {
-      color: #9ca3af;
-      margin: 10px 0;
-      padding-left: 15px;
-    }
-  </style>
+  <title>SpendCheck - Category Grouping</title>
+  <link rel="stylesheet" href="mainpage.css">
 </head>
 <body>
 
-  <div class="top-nav">
-    <a href="index.html" class="back-btn">← Back to Dashboard</a>
-    <span id="userGreeting" style="font-weight: 600; color: #4b5563;"></span>
-  </div>
+  <!-- Unified Navigation Bar -->
+  <nav class="app-nav">
+    <div class="nav-container">
+      <a href="index.html" class="brand-link">
+        <div class="brand-icon-wrapper">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+        <span>SpendCheck</span>
+      </a>
 
-  <h1>Category Grouping</h1>
-  <div id="categories">Loading grouped expenses...</div>
+      <!-- Mobile Menu Toggle Button -->
+      <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Nav Items -->
+      <div class="nav-menu" id="navMenu">
+        <div class="nav-links">
+          <a href="index.html" class="nav-link">Dashboard</a>
+          <!-- Butter Yellow Location 1: Active Nav Item Underline -->
+          <a href="grouping.html" class="nav-link active">Grouping</a>
+          <a href="currency.html" class="nav-link">Currency</a>
+        </div>
+
+        <div class="nav-user-section">
+          <span id="userGreeting" class="user-greeting-pill"></span>
+          <button id="logoutBtn" class="btn-nav-logout" style="display: none;">Log out</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="app-container" style="max-width: 980px;">
+    <header class="page-header">
+      <h1 class="page-title">Category Breakdown</h1>
+      <p class="page-subtitle">Grouped spending distribution with proportional allocation bars</p>
+    </header>
+
+    <!-- Top Summary Card -->
+    <div class="grouping-summary-card">
+      <div>
+        <div style="font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 4px;">
+          Overall Spending
+        </div>
+        <!-- Butter Yellow Location 2: Highlight on main total/summary number -->
+        <div id="groupingGrandTotal" class="metric-value metric-highlight-value" style="font-size: 28px;">
+          ₹0
+        </div>
+      </div>
+      <div>
+        <a href="index.html" class="btn-primary" style="height: 38px; font-size: 13.5px; text-decoration: none;">
+          <span>← Back to Dashboard</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Category Sections Container (Populated by loadGroupedExpenses) -->
+    <div id="categories">
+      <div style="text-align: center; padding: 40px; color: var(--text-muted); font-size: 15px;">
+        Loading grouped expenses...
+      </div>
+    </div>
+  </div>
 
   <script src="config.js"></script>
   <script src="api.js"></script>
   <script>
+    // Universal Currency Formatter: Thousands separators & no decimals when whole (e.g. ₹52,568 and ₹200)
+    function formatCurrency(amount) {
+      const num = parseFloat(amount);
+      if (isNaN(num)) return "₹0";
+      const rounded = Math.round(num * 100) / 100;
+      const isWhole = (rounded % 1 === 0);
+      return "₹" + rounded.toLocaleString("en-US", {
+        minimumFractionDigits: isWhole ? 0 : 2,
+        maximumFractionDigits: isWhole ? 0 : 2
+      });
+    }
+
     if (requireAuth()) {
       const user = getUser();
-      if (user) {
-        document.getElementById("userGreeting").textContent = `Logged in as ${user.name || user.email}`;
+      const greetingEl = document.getElementById("userGreeting");
+      const logoutBtn = document.getElementById("logoutBtn");
+
+      if (user && greetingEl) {
+        greetingEl.textContent = `Hi, ${user.name || user.email}!`;
+      }
+      if (logoutBtn) {
+        logoutBtn.style.display = "inline-block";
+        logoutBtn.addEventListener("click", () => {
+          SpendCheckAPI.logout();
+        });
       }
 
       loadGroupedExpenses();
@@ -134,9 +127,10 @@
         const res = await SpendCheckAPI.getExpenses();
         const expenses = (res && res.data) || [];
 
+        let grandTotal = 0;
         expenses.forEach(entry => {
+          grandTotal += parseFloat(entry.amount || 0);
           const catKey = entry.categoryDisplayName || entry.category;
-          // Match case-insensitively
           for (let c in categories) {
             if (c.toLowerCase() === (catKey || "").toLowerCase()) {
               categories[c].push(entry);
@@ -144,6 +138,10 @@
             }
           }
         });
+
+        // Update Grand Total once per data load
+        const grandTotalEl = document.getElementById("groupingGrandTotal");
+        if (grandTotalEl) grandTotalEl.textContent = formatCurrency(grandTotal);
 
         container.innerHTML = "";
 
@@ -163,10 +161,22 @@
 
           const totalSpan = document.createElement("span");
           totalSpan.className = "category-total";
-          totalSpan.textContent = `Total: ₹${total.toFixed(2)} (${items.length} item${items.length === 1 ? '' : 's'})`;
+          totalSpan.textContent = `Total: ${formatCurrency(total)} (${items.length} item${items.length === 1 ? '' : 's'})`;
           headerDiv.appendChild(totalSpan);
 
           section.appendChild(headerDiv);
+
+          // Add proportional pure-CSS progress bar once per load
+          const percent = grandTotal > 0 ? Math.min(100, Math.max(0, ((total / grandTotal) * 100))).toFixed(1) : 0;
+          const track = document.createElement("div");
+          track.className = "category-progress-track";
+          track.title = `${percent}% of total spending`;
+
+          const fill = document.createElement("div");
+          fill.className = `category-progress-fill fill-${cat.toLowerCase()}`;
+          fill.style.width = `${percent}%`;
+          track.appendChild(fill);
+          section.appendChild(track);
 
           if (items.length === 0) {
             const empty = document.createElement("p");
@@ -183,7 +193,7 @@
               const dateFormatted = d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
               line.innerHTML = `
-                <span class="amount">₹${parseFloat(entry.amount).toFixed(2)}</span>
+                <span class="amount">${formatCurrency(entry.amount)}</span>
                 <span class="date">${dayName}, ${dateFormatted}</span>
               `;
               section.appendChild(line);
@@ -193,8 +203,24 @@
           container.appendChild(section);
         }
       } catch (err) {
-        container.innerHTML = `<p style="color: red; text-align: center;">Error loading grouped expenses: ${err.message}</p>`;
+        container.innerHTML = `<p style="color: #dc2626; text-align: center; padding: 30px;">Error loading grouped expenses: ${err.message}</p>`;
       }
+    }
+
+    // Purely Visual UI: Mobile Nav Toggle
+    const navToggle = document.getElementById("navToggle");
+    const navMenu = document.getElementById("navMenu");
+    if (navToggle && navMenu) {
+      navToggle.addEventListener("click", () => {
+        const isOpen = navMenu.classList.toggle("open");
+        navToggle.setAttribute("aria-expanded", isOpen);
+      });
+      document.addEventListener("click", (e) => {
+        if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
+          navMenu.classList.remove("open");
+          navToggle.setAttribute("aria-expanded", "false");
+        }
+      });
     }
   </script>
 
